@@ -136,3 +136,11 @@ void bubbleSortRecursiveAdaptive(Item *a, int size){
     if(isOrdered) return;
     bubbleSortRecursiveAdaptive(a, size-1);
 }
+
+/*Insertion Sort Ricorsivo*/
+void insertionSortRecursive(Item *a, int size){
+    if(size <= 1) return;
+    insertionSortRecursive(a, --size);
+    int n = size;
+    insertSortedArray(a, &n, *(a + n));
+}
