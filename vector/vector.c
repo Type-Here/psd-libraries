@@ -16,6 +16,7 @@ void output_array(Item *arr, int size){
     int i;
     for(i = 0; i < size; i++){
         outputItem(arr[i]);
+        printf(" ");
     }  
 }
 
@@ -39,7 +40,7 @@ Item * concatena_array(Item *arr1, Item *arr2, int size1, int size2){
 /*- Ritorna l'indice dell'elemento Minimo -*/
 int minimo(Item *arr, int size){
     int i, min = 0;
-    for(i = 0; i < size; i++){
+    for(i = 1; i < size; i++){
         if(cmpItem(arr[min], arr[i]) > 0){
             min = i;
         }
@@ -50,7 +51,7 @@ int minimo(Item *arr, int size){
 /*- Ritorna l'indice dell'elemento Massimo -*/
 int massimo(Item *arr, int size){
     int i, max = 0;
-    for(i = 0; i < size; i++){
+    for(i = 1; i < size; i++){
         if(cmpItem(arr[max], arr[i]) < 0){
             max = i;
         }
@@ -61,11 +62,11 @@ int massimo(Item *arr, int size){
 
 /*- Selection Sort -*/
 void selectionSort(Item *a, int size){
-    int i = 1;
+    int i = 0;
     int min;
-    for(i; i < size - 1; i++){
+    for(i; i < size; i++){
         min = minimo(a + i, size - i);
-        swap(&a[i], &a[min]);
+        swap(&a[i], &a[min + i]);
     }
 }
 
