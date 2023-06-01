@@ -13,3 +13,8 @@ void bubbleSortAdaptive(Item *, int size);
 
 void insertionSort(Item *, int size);
 void insertSortedArray(Item *a, int * n, Item el); // n < size! controllo da implementare in funzione chiamante!
+
+/* Ordinamenti Semplici Array Ricorsivi */
+void bubbleSortRecursiveAdaptive(Item *a, int size);
+void selectionSortRecursive(Item *a, int size);
+void insertionSortRecursive(Item *a, int size);
