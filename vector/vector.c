@@ -35,7 +35,7 @@ Item * concatena_array(Item *arr1, Item *arr2, int size1, int size2){
 	}
 }
 
-/**-- FUNZIONI PER ORDINAMENTI --**/
+/**-- ORDINAMENTI SEMPLICI --**/
 
 /*- Ritorna l'indice dell'elemento Minimo -*/
 int minimo(Item *arr, int size){
@@ -113,3 +113,26 @@ void insertSortedArray(Item *a, int * n, Item el){ // n < size! controllo da imp
     ++(*n);
 }
 
+/** -ORDINAMENTI SEMPLICI RICORSIVI- **/
+
+/*Selection Sort Ricorsivo*/
+void selectionSortRecursive(Item *a, int size){
+    if(size <= 1) return;
+    int min = minimo(a, size);
+    swap(&a[0], &a[min]);
+    selectionSortRecursive(a+1, size-1);
+}
+
+/*BubbleSort Ricorsivo Adattivo*/
+void bubbleSortRecursiveAdaptive(Item *a, int size){
+    if(size <= 1) return;
+    int i, isOrdered = 1;
+    for(i = 0; i < size - 1; i++){
+        if(cmpItem(a[i], a[i+1]) > 0){
+            swap(&a[i], &a[i+1]);
+            isOrdered = 0;
+        }
+    }
+    if(isOrdered) return;
+    bubbleSortRecursiveAdaptive(a, size-1);
+}
