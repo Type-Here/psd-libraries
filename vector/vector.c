@@ -136,3 +136,71 @@ void bubbleSortRecursiveAdaptive(Item *a, int size){
     if(isOrdered) return;
     bubbleSortRecursiveAdaptive(a, size-1);
 }
+
+/*Insertion Sort Ricorsivo*/
+void insertionSortRecursive(Item *a, int size){
+    if(size <= 1) return;
+    insertionSortRecursive(a, --size);
+    int n = size;
+    insertSortedArray(a, &n, *(a + n));
+}
+
+
+/*-- RICERCA BINARIA --*/
+int binarySearch(Item *a, int size, Item el){ //ritorna indice dell'array, -1 non trovato
+    int m;
+    int sup = size - 1;
+    int inf = 0;
+    while(inf <= sup){
+        m = (sup + inf + 1) / 2;
+        if(cmpItem(el, a[m]) == 0) return m;
+        else if(cmpItem(el, a[m]) > 0){
+            inf = m+1;
+        } else {
+            sup = m-1;
+        }
+    }
+    return -1;
+}
+
+/*Ricerca Binaria Ricorsiva*/
+int binarySearchRecursive(Item *a, int size, Item el){
+    if(size < 1) return -1;
+    int m = size / 2;
+    if(cmpItem(el,a[m]) == 0){ return m;}
+    else if(cmpItem(el,a[m]) > 0){
+        /* I fattori m +/-1 correttivi servono perché la funz ricorsiva ritorna l'indice
+         * nel sottoarray di dimensioni minori sopra o sotto la media al livello superiore rispettivamente;
+         * corrispondono alla quantità aggiunta o sotratta nella ricorsione. */
+        return m + 1 + binarySearchRecursive(a + (m + 1), size - (m + 1), el);
+        //vai nel sotto array superiore da pos m+1
+    } else {
+        return m - 1 - binarySearchRecursive(a, size -(m+1), el);
+        //vai nel sotto-array inferiore da 0 (relativo) a m-1
+    }
+}
+
+
+
+/*--RICERCA BINARIA RICORSIVA -- Vecchia Implementazione, lasciata per documentazione
+int BinarySearchRec_internal(int *a, int inf, int sup, int k){
+	int center;
+	if(inf > sup) return -1;
+	else{
+		 center = (inf + sup) / 2;
+		 if(a[center] == k) return center;
+		 else if(a[center] < k){
+			 inf = center + 1;
+			 return BinarySearchRec_internal(a,inf,sup,k);
+		 }
+		 else{
+			sup = center - 1;
+			return BinarySearchRec_internal(a,inf,sup,k);
+		 }
+	 }
+	
+}
+
+int BinarySearchRec(int *a, int size, int k){
+	return BinarySearchRec_internal(a,0,size-1,k);
+}*/
