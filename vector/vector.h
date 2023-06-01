@@ -3,7 +3,7 @@
 /* --Funzioni Generiche-- */
 void input_array(Item *arr, int size);
 void output_array(Item *arr, int size);
-Item * concatena_array(Item *arr1, Item *arr2, int size1, int size2);
+Item * concatena_array(Item *arr1, Item *arr2, int size1, int size2); //ritorna un terzo array
 
 /* Ordinamenti Semplici Array */
 void selectionSort(Item *, int size); 
@@ -22,3 +22,9 @@ void insertionSortRecursive(Item *a, int size);
 /* Ricerca Binaria */
 int binarySearch(Item *a, int size, Item el); //ritorna indice di array, -1 non trovato
 int binarySearchRecursive(Item *a, int size, Item el); //ritorna indice di array, -1 non trovato
+
+/* Ordinamenti Più Avanzati Array */
+void mergeSort(Item *a, int size);
+void quickSort(Item *a, int size);
+
+void mergeSortIterative(Item *a, int size);
