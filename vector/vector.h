@@ -18,3 +18,7 @@ void insertSortedArray(Item *a, int * n, Item el); // n < size! controllo da imp
 void bubbleSortRecursiveAdaptive(Item *a, int size);
 void selectionSortRecursive(Item *a, int size);
 void insertionSortRecursive(Item *a, int size);
+
+/* Ricerca Binaria */
+int binarySearch(Item *a, int size, Item el); //ritorna indice di array, -1 non trovato
+int binarySearchRecursive(Item *a, int size, Item el); //ritorna indice di array, -1 non trovato
