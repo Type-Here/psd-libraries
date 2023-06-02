@@ -41,6 +41,15 @@ Item * concatena_array(Item *arr1, Item *arr2, int size1, int size2){
 
 /**-- ORDINAMENTI SEMPLICI --**/
 
+/*Array Ordinato in Modo Crescente; 1 true; 0 false*/
+int isOrderedArrayC(Item *a, int size){
+    int i = 0;
+    while(i<size-1){
+        if(cmpItem(a[i], a[i+1]) > 0) return 0;
+    }
+    return 1;
+}
+
 /*- Ritorna l'indice dell'elemento Minimo -*/
 int minimo(Item *arr, int size){
     int i, min = 0;
@@ -249,8 +258,19 @@ void mergeSort(Item *a, int size){
 }
 
 /*QuickSort*/
+Item medianOfThreeItem(Item b, Item m, Item e){
+    if(cmpItem(m,b) > 0){
+        if(cmpItem(m,e) < 0) return m;
+        else return e;
+    } else {
+        if(cmpItem(b,e) < 0) return b;
+        else return e;
+    }
+}
+
 int qsPartition(Item *a, int begin, int end){
     Item pivot = a[begin];
+    //Item pivot = medianOfThreeItem(a[begin], a[(begin + 2)/2], a[end]); //Ottimizzazione con calcolo mediana tra 3 valori
     int i = begin-1;
     int j = end+1;
     while(1){
@@ -276,6 +296,7 @@ void qsInternal(Item *a, int begin, int end){
 
 void quickSort(Item *a, int size){
     if(size <= 1) return;
+    //if(size <= 1 || isOrderedArrayC(a, size)) return; //Ottimizzazione se già ordinato ritorna
     qsInternal(a, 0, size-1);
 }
 
