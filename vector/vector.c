@@ -5,6 +5,10 @@
 #include "../utils/utils.h"
 #include "vector.h"
 
+/*Dichiarazioni Locali*/
+void merge(Item *a1, Item *a2, int s1, int s2, Item * a);
+
+/* -- I/O ARRAY -- */
 void input_array(Item *arr, int size){
     int i;
     for(i = 0; i < size; i++){
@@ -36,6 +40,15 @@ Item * concatena_array(Item *arr1, Item *arr2, int size1, int size2){
 }
 
 /**-- ORDINAMENTI SEMPLICI --**/
+
+/*Array Ordinato in Modo Crescente; 1 true; 0 false*/
+int isOrderedArrayC(Item *a, int size){
+    int i = 0;
+    while(i<size-1){
+        if(cmpItem(a[i], a[i+1]) > 0) return 0;
+    }
+    return 1;
+}
 
 /*- Ritorna l'indice dell'elemento Minimo -*/
 int minimo(Item *arr, int size){
@@ -204,3 +217,102 @@ int BinarySearchRec_internal(int *a, int inf, int sup, int k){
 int BinarySearchRec(int *a, int size, int k){
 	return BinarySearchRec_internal(a,0,size-1,k);
 }*/
+
+
+/** - ORDINAMENTI AVANZATI ARRAY - **/
+
+/*Funzione Merge: Unisce due sottoarray, T(n) = O(n); S(n) = n*/
+void merge(Item *a1, Item *a2, int s1, int s2, Item * a){
+    int i, j, k;
+    Item b[s1+s2];
+    for(i = j = k = 0; i < s1 && j <s2; k++){
+        if(cmpItem(a1[i],a2[j]) <= 0){
+            b[k] = a1[i];
+            i++;
+        } else {
+            b[k] = a2[j];
+            j++;
+        }
+    }
+
+    for(; i < s1; i++, k++){
+        b[k] = a1[i];
+    }
+
+    for(; j < s2; j++, k++){
+        b[k] = a2[j];
+    }
+
+    for(k = 0; k < s2+s1; k++){
+        a[k] = b[k];
+    }
+}
+
+
+/* MergeSort */
+void mergeSort(Item *a, int size){
+    if(size <= 1) return;
+    mergeSort(a, size/2);
+    mergeSort(a + size/2, size - size/2);
+    merge(a, a + size/2, size/2, size - size/2, a);
+}
+
+/*QuickSort*/
+Item medianOfThreeItem(Item b, Item m, Item e){
+    if(cmpItem(m,b) > 0){
+        if(cmpItem(m,e) < 0) return m;
+        else return e;
+    } else {
+        if(cmpItem(b,e) < 0) return b;
+        else return e;
+    }
+}
+
+int qsPartition(Item *a, int begin, int end){
+    Item pivot = a[begin];
+    //Item pivot = medianOfThreeItem(a[begin], a[(begin + 2)/2], a[end]); //Ottimizzazione con calcolo mediana tra 3 valori
+    int i = begin-1;
+    int j = end+1;
+    while(1){
+        do{
+            i++;
+        } while(cmpItem(a[i], pivot) < 0);
+
+        do{
+            j--;
+        } while(cmpItem(a[j], pivot) > 0);
+
+        if(i >= j) return j;
+        swap(&a[i], &a[j]);
+    }
+}
+
+void qsInternal(Item *a, int begin, int end){
+    if(begin >= end) return;
+    int pivot = qsPartition(a, begin, end);
+    qsInternal(a, begin, pivot);
+    qsInternal(a, pivot+1, end);
+}
+
+void quickSort(Item *a, int size){
+    if(size <= 1) return;
+    //if(size <= 1 || isOrderedArrayC(a, size)) return; //Ottimizzazione se già ordinato ritorna
+    qsInternal(a, 0, size-1);
+}
+
+/*MergeSort Iterativo*/
+void mergeSortIterative(Item *a, int size){
+    int dim = 1;
+    int right, left;
+    while(dim < size){
+        right = dim;
+        left = 0;
+        while(right < size){
+            int rend = (right + dim - 1 < size) ? dim : (size - right);
+            merge(a + left, a + right, dim, rend, a + left);
+            left += (2*dim);
+            right += (2*dim);
+        }
+        dim = 2*dim;
+    }
+}
