@@ -24,7 +24,7 @@ int binarySearch(Item *a, int size, Item el); //ritorna indice di array, -1 non 
 int binarySearchRecursive(Item *a, int size, Item el); //ritorna indice di array, -1 non trovato
 
 /* Ordinamenti Più Avanzati Array */
-void mergeSort(Item *a, int size);
-void quickSort(Item *a, int size);
+void mergeSort(Item *a, int size); //Usa merge, ricorsivo
+void quickSort(Item *a, int size); //Pivot = a[begin]
 
-void mergeSortIterative(Item *a, int size);
+void mergeSortIterative(Item *a, int size); //Versione iterativa, usa merge
