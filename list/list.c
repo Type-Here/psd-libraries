@@ -244,3 +244,232 @@ List cloneListItem(List l){
     }
     return copy;
 }
+
+
+/* -- FUNZIONI RICORSIVE -- */
+
+/*Chiamata Ricorsiva Interna per Stampa Lista*/
+void printListRec_Internal(struct node *t){
+    if(!t) return;
+    outputItem(t->value);
+    printf(" ");
+    printListRec_Internal(t->next);
+}
+
+
+/* - Main Func: PrintList Recursive*/
+void printListRec(List l){
+    struct node * temp = l->head;
+    printListRec_Internal(temp);
+}
+
+/* Si potrebbero fare anche in una sola funzione senza funzione ombra, ma occuperebbe più spazio
+ * allocando memoria per una lista temporanea di un solo elemento. 
+ * Un esempio qui per printlist ma vale per quasi tutte le ricorsive. */
+
+/* - ESEMPIO: Stampa Lista ricorsiva in una sola funzione, non disponibile fuori dal modulo*/
+void printListRec_Alternative(List l){
+    if(l->head == NULL) return;
+    List temp = newList();
+    temp->head = l->head->next;
+    outputItem(l->head->value);
+    printListRec_Alternative(temp);
+    free(temp);
+}
+/*Fine Esempio*/
+
+/*SearchList by Item Recursive Internal */
+Item searchListRec_Internal(struct node *temp, Item el, int* pos){
+    if(temp == NULL) {
+        return NULL;
+        *pos = -1;
+    }
+    if(cmpItem(temp->value, el) == 0) return temp->value;
+    (*pos)++;
+    return searchListRec_Internal(temp->next, el, pos);
+}
+
+/* - Main Func: SearchList by Item Recursive */
+Item searchListRec(List l, Item el, int* pos){
+    struct node *temp = l->head;
+    *pos = 0;
+    return searchListRec_Internal(temp,el,pos);
+}
+
+/*Internal ItemListRec*/
+int countItemListRec_Internal(struct node *temp, Item el, int *count){
+    if(temp == NULL) return -1; //valore di ritorno non usato per differente implementazione
+    if(cmpItem(temp->value, el) == 0) (*count)++;
+    return countItemListRec_Internal(temp->next, el, count);
+}
+
+/* - Main Func: Conta Numero di Ricorrenze di Item el in Lista*/
+int countItemListRec(List l, Item el){
+    if(isEmptyList(l)) return -1;
+    struct node * temp = l->head;
+    int count = 0;
+    countItemListRec_Internal(temp, el, &count);
+    return count;
+}
+
+/*Inverte Lista Ricorsivamente*/
+void reverseListRecursive(List l){
+    if(isEmptyList(l)) return;
+    Item el = removeHead(l);
+    reverseListRecursive(l);
+    addListTail(l, el);
+}
+
+
+/*Distruggi tutti i nodi ma rimane la lista vuota*/
+void destroyListRec(List l){
+    if(isEmptyList(l)) return;
+    //free(removeHead(l)); //commentato per testing senza allocazione dinamica degli item
+    removeHead(l);
+    destroyListRec(l);
+}
+
+/*-- FREE LIST --*/
+
+/*Free List and all its nodes*/
+int freeList(List l){
+    while(!isEmptyList(l)){
+        //free(removeHead(l)); //commentato per testing senza allocazione dinamica degli item
+        removeHead(l);
+    }
+    free(l);
+    return 1;
+}
+
+
+/* --- SORTING LIST FUNCTIONS --- */
+
+    /* - MERGESORT - */
+
+/*Dichiarazioni Locali per MergeSort*/
+void mergeSortList_Internal(struct node ** head_pointer);
+struct node * findMiddleList(struct node * head);
+void halfSplit(struct node *head, struct node **left, struct node **right);
+struct node * sortedMergeList(struct node * left, struct node * right);
+
+/*Internal of MergeSort List*/
+void mergeSortList_Internal(struct node ** head_pointer){
+    struct node *head = *head_pointer;
+    struct node *left = NULL;
+    struct node *right = NULL;
+
+    // Caso Base -- Size 0 o 1
+	if ((head == NULL) || (head->next == NULL)){ return; }
+
+    // Split head into 2 sublists
+	halfSplit(head, &left, &right);
+
+	// Recursively sort the sublists
+	mergeSortList_Internal(&left);
+	mergeSortList_Internal(&right);
+
+	/* answer = merge the two sorted lists together */
+	*head_pointer = sortedMergeList(left, right);
+}
+
+/* findMiddleList, trova il nodo centrale di una lista
+ * Usa la strategia slow - fast 
+ * Così facendo slow arriverà a metà */
+struct node * findMiddleList(struct node * head){
+    struct node * slow = head;
+    struct node * fast = head->next;
+    while(fast && fast->next){
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    return slow;
+}
+
+/*HalfSplit: divide la lista in due metà*/
+void halfSplit(struct node *head, struct node **left, struct node **right){
+    struct node * middle = findMiddleList(head); //trova nodo centrale
+    
+    *left = head; //Assegna a left la "head" della metà sinistra dlla lista
+    *right = middle->next; //Assegna a right la "head" della metà destra della lista
+    middle->next = NULL; //Splitta fisicamente la lista a metà
+}
+
+/* SortedMerge = Merge delle Sottoliste
+ * Ritorna puntatore a sottolista riunita e ordinata
+ * Qui avviene il confronto e l'odinamento */
+struct node * sortedMergeList(struct node * left, struct node * right){
+    struct node * ordered_head;
+        /* Base cases */
+    /* SubMergeSort ritorna puntatori a: 
+     * NULL se la sottolista è vuota, 
+     * il puntatore a un lista se la lista non è vuota
+     * anche se ha un solo valore (come nei casi base)
+     * e a fine scorrimento liste! */
+    if (left == NULL) return (right);
+    else if (right == NULL) return (left);
+
+    if(cmpItem(left->value, right->value) <= 0){ //se il primo di sinistra minore o uguale di destra
+        ordered_head = left;
+        left->next = sortedMergeList(left->next, right); //compare il secondo della prima lista con il primo della seconda e così via
+    } else { //cso di dx < di sn
+        ordered_head = right;
+        right->next = sortedMergeList(left, right->next);
+    }
+    return ordered_head;
+}
+
+
+/* - MergeSort: FUNZIONE PRINCIPALE - */
+void mergeSortList(List l){
+    struct node * temp = l->head;
+    if(isEmptyList(l) || sizeList(l) == 1) return;
+    mergeSortList_Internal(&temp);
+}
+
+
+    /* - SELECTION SORT LIST - */
+
+/*Implementazione Locale di Swap Item per Lista*/
+void swapItemList(Item *a, Item *b){
+    Item temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+/*-Trova il valore minimo in una lista di Item, Ritorna Puntatore a Nodo Minimo -*/
+struct node * minItemList(struct node * head){
+    struct node * temp = head->next;
+    struct node * min = head;
+    while(temp){
+        if(cmpItem(temp->value, min->value) < 0){ min = temp; }
+        temp = temp->next;
+    }
+    return min;
+}
+
+/*Internal di SelectionSort Ricorsivo*/
+void selectionSortList_Internal(struct node * head){
+    if(!(head->next)) return;
+    struct node * minimo = minItemList(head);
+    swapItemList(&(head->value), &(minimo->value));
+    selectionSortList_Internal(head->next);
+}
+
+/*- Implementazione SELECTION SORT, Versione Ricorsiva -*/
+void selectionSortListRecursive(List l){
+    if(isEmptyList(l) || sizeList(l) == 1) return;
+    struct node * head = l->head;
+    selectionSortList_Internal(head);
+}
+
+/*- Implementazione SELECTION SORT, Versione Iterativa -*/
+void selectionSortList(List l){
+    if(isEmptyList(l) || sizeList(l) == 1) return;
+    struct node * temp = l->head;
+    struct node * minimo;
+    while(temp->next){
+         minimo = minItemList(temp);
+         swapItemList(&(temp->value), &(minimo->value));
+         temp = temp->next;
+    }
+}
