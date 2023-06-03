@@ -44,5 +44,10 @@ void reverseListRecursive(List);
 
 void destroyListRec(List); //Distruggi tutti i nodi ma rimane la lista vuota
 
+/*--Ordinamenti Liste--*/ //Ordine Crescente
+void mergeSortList(List);
+void selectionSortList(List);
+void selectionSortListRecursive(List);
+
 /*--Free List--*/
 int freeList(List);
