@@ -244,3 +244,98 @@ List cloneListItem(List l){
     }
     return copy;
 }
+
+
+/* -- FUNZIONI RICORSIVE -- */
+
+/*Chiamata Ricorsiva Interna per Stampa Lista*/
+void printListRec_Internal(struct node *t){
+    if(!t) return;
+    outputItem(t->value);
+    printf(" ");
+    printListRec_Internal(t->next);
+}
+
+
+/* - Main Func: PrintList Recursive*/
+void printListRec(List l){
+    struct node * temp = l->head;
+    printListRec_Internal(temp);
+}
+
+/* Si potrebbero fare anche in una sola funzione senza funzione ombra, ma occuperebbe più spazio
+ * allocando memoria per una lista temporanea di un solo elemento. 
+ * Un esempio qui per printlist ma vale per quasi tutte le ricorsive. */
+
+/* - Stampa Lista ricorsiva in una sola funzione, non disponibile fuori dal modulo*/
+void printListRec_Alternative(List l){
+    if(l->head == NULL) return;
+    List temp = newList();
+    temp->head = l->head->next;
+    outputItem(l->head->value);
+    printListRec_Alternative(temp);
+    free(temp);
+}
+
+/*SearchList by Item Recursive Internal */
+Item searchListRec_Internal(struct node *temp, Item el, int* pos){
+    if(temp == NULL) {
+        return NULL;
+        *pos = -1;
+    }
+    if(cmpItem(temp->value, el) == 0) return temp->value;
+    (*pos)++;
+    return searchListRec_Internal(temp->next, el, pos);
+}
+
+/* - Main Func: SearchList by Item Recursive */
+Item searchListRec(List l, Item el, int* pos){
+    struct node *temp = l->head;
+    *pos = 0;
+    return searchListRec_Internal(temp,el,pos);
+}
+
+/*Internal ItemListRec*/
+int countItemListRec_Internal(struct node *temp, Item el, int *count){
+    if(temp == NULL) return -1; //valore di ritorno non usato per differente implementazione
+    if(cmpItem(temp->value, el) == 0) (*count)++;
+    return countItemListRec_Internal(temp->next, el, count);
+}
+
+/* - Main Func: Conta Numero di Ricorrenze di Item el in Lista*/
+int countItemListRec(List l, Item el){
+    if(isEmptyList(l)) return -1;
+    struct node * temp = l->head;
+    int count = 0;
+    countItemListRec_Internal(temp, el, &count);
+    return count;
+}
+
+/*Inverte Lista Ricorsivamente*/
+void reverseListRecursive(List l){
+    if(isEmptyList(l)) return;
+    Item el = removeHead(l);
+    reverseListRecursive(l);
+    addListTail(l, el);
+}
+
+
+/*Distruggi tutti i nodi ma rimane la lista vuota*/
+void destroyListRec(List l){
+    if(isEmptyList(l)) return;
+    //free(removeHead(l)); //commentato per testing senza allocazione dinamica degli item
+    removeHead(l);
+    destroyListRec(l);
+}
+
+/*-- FREE LIST --*/
+
+/*Free List and all its nodes*/
+int freeList(List l){
+    while(!isEmptyList(l)){
+        //free(removeHead(l)); //commentato per testing senza allocazione dinamica degli item
+        removeHead(l);
+    }
+    free(l);
+    return 1;
+}
