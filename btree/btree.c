@@ -1,0 +1,268 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "btree.h"
+
+#include "../item/item.h"
+#include "../list/list.h"
+
+
+/* --- ALBERO BINARIO ---
+ * L’ALBERO (generico) è un grafo diretto aciclico, una struttura informativa per rappresentare: 
+ *  - Organizzazioni gerarchiche di dati 
+ *  - Partizioni successive di un insieme in sottoinsiemi disgiunti
+ *  - Procedimenti decisionali enumerativi
+ * 
+ * L'Alberio BINARIO:
+ * Speciale ADT Albero con nodi aventi al massimo due figli (sinistro e destro).
+ * 
+ * Esempio di Albero Binario (da riferimento per gli esempi in funzioni successivamente)
+ *                                       h
+ *                                     /   \
+ *                                    a     c
+ *                                  /  \   /  \                                  
+ *                                 d    l  p   s
+ *                                     / \
+ *                                    o   p
+ * 
+ */
+
+/* -- DEFINIZIONE STRUTTURA -- */
+struct node{
+	Item value;
+	struct node * left;
+	struct node * right;
+};
+
+/*-- INIZIALIZZAZIONE ALBERO BINARIO --*/
+
+/* newTree: nuovo nodo Inizializzato a NULL
+ * Diverso da buildTree che invece crea un vero e proprio nodo */
+BTree newTree(){
+    return NULL;
+}
+
+/* BuildTree: Crea una nuova radice / nodo genitore
+ * Argomenti: Figlio SN, Figlio DX, Value del nodo genitore
+ * Costruttore di Tipo Bottom-Up: dalle foglie alla radice.
+ * Sostanzialmente diverso da newTree, le funzioni non gestiscono bene valori NULLI del nodo.
+ * Pertanto si consiglia di usare newTree se si intende lasciare il nodo vuoto. */
+BTree buildTree(BTree left, BTree right, Item value){
+    BTree t = newTree();
+    t = malloc(sizeof(struct node));
+    t->left = left;
+    t->right = right;
+    t->value = value;
+    return t;
+}
+
+/*-- OTTIENI INFORMAZIONI SULL'ALBERO --*/
+
+/*Come precisato in BuidTree e newTree il check per vedere se vuoto controlla se BTree t = NULL 
+* non il suo valore! (t->value) 
+* Ritorna 1 se vuoto, 0 altrimenti */
+int isEmptyTree(BTree t){
+    if(t == NULL) return 1;
+    return 0;
+}
+
+/* Ottieni il Valore Item del Nodo Visitato (non della radice dell'albero!)
+ * Ritorna l'Item se presente, altrimenti NULL */
+Item getBTreeRoot(BTree t){
+    if(isEmptyTree(t)) return NULL;
+    return t->value;
+}
+
+/* Ottieni il Puntatore al Figlio SINISTRO del Nodo Visitato (non della radice dell'albero!)
+ * Ritorna il NODO se presente, altrimenti NULL */
+BTree getLeft(BTree t){
+    if(isEmptyTree(t)) return NULL;
+    return t->left;
+}
+
+
+/* Ottieni il Puntatore al Figlio DESTRO del Nodo Visitato (non della radice dell'albero!)
+ * Ritorna il NODO se presente, altrimenti NULL */
+BTree getRight(BTree t){
+    if(isEmptyTree(t)) return NULL;
+    return t->right;
+}
+
+
+/* ---- VISITE ALL'ALBERO BINARIO ---- */
+
+/* - VISITE RICORSIVE - */
+
+/* La Visita PreOrder:
+ *  - Prima visita il nodo in cui si trova (Stampa il Suo Valore)
+ *  - Poi Visita il Figlio sinistro e ne stampa il valore
+ *  - Poi Visita il Figlio destro e ne stampa il valore
+ * Es. su Albero di Esempio: h a d l o q c p s  
+ * */
+void preOrder(BTree t){
+    if(isEmptyTree(t)) return; //Passo Base
+    outputItem(getBTreeRoot(t));
+    preOrder(getLeft(t));
+    preOrder(getRight(t));
+    /*NB si potrebbe scrivere anche in questo modo 
+      ma per favorire l'implementazione al difuori del modulo uso getLeft e getRight*/
+    //outputIte(t->value);
+    //preOrder(t->left);
+    //preOrder(t->right);
+}
+
+/* La Visita PostOrder:
+ *  - Prima Visita i Figli sinistri fino in fondo e risalendo ne stampa il valore
+ *  - Poi Visita i Figli destri e ne stampa il valore
+ *  - Infine visita le readici e ne stampa il valore
+ * Es. su Albero di Esempio: d o q l a p s c h  
+ * */
+void postOrder(BTree t){
+    if(isEmptyTree(t)) return; //Passo Base
+    postOrder(getLeft(t));
+    postOrder(getRight(t));
+    outputItem(t->value);
+}
+
+/* La Visita InOrder o Simmetrica:
+ *  - Prima Visita i Figli sinistri fino in fondo e risalendo ne stampa il valore
+ *  - Poi visita le radici e ne stampa il valore
+ *  - Infine visita i Figli destri e ne stampa il valore 
+ * Es. su Albero di Esempio: d a o l q h p c s  
+ * */
+void inOrder(BTree t){
+    if(isEmptyTree(t)) return; //Passo Base
+    inOrder(getLeft(t));
+    outputItem(t->value);
+    inOrder(getRight(t));
+} 
+
+/* - IMPLEMENTAZIONI AGGIUNTIVE - */
+
+/*Return Max of Value beetween 2 int*/
+int maxOfValue(int a, int b){
+    if(a >= b) return a;
+    return b;
+}
+
+/* - Altezza dell'Albero: Ricorsiva - Nodo Radice = 0 */
+int btreeHeight(BTree t){ //Altezza albero binario
+    if(isEmptyTree(t)) return 0; //P.B.
+    if(!getLeft(t) && !getRight(t)) return 0; //P.B. (utile per non aggiungere h=1 quando solo radice!)
+    return 1 + maxOfValue(btreeHeight(getLeft(t)), btreeHeight(getRight(t)));
+}
+
+/* - Ottieni Numero di Nodi: Ricorsivo - */
+int btreeNodesNumber(BTree t){
+    if(isEmptyTree(t)) return 0; //P.B.
+    return 1 + btreeNodesNumber(getLeft(t)) + btreeNodesNumber(getRight(t));
+}
+
+/* Internal Visita per livelli
+ * Stampa un livello specifico dell'albero */
+void printBTreeSpecificLevel(BTree t, int level){
+    if(isEmptyTree(t)) return; //P.B.
+    if(level == 0) outputItem(getBTreeRoot(t));
+    if(level > 0){
+        printBTreeSpecificLevel(getLeft(t), level - 1);
+        printBTreeSpecificLevel(getRight(t), level - 1);
+    }
+}
+
+/* - Visita per Livelli: Ricorsiva - */
+void printBTreePerLevel(BTree t){ //Printa l'albero per livelli
+     int height = btreeHeight(t);
+     int level;
+     for(level = 0; level <= height; level++){
+        if(level != 0) printf("- ");
+        printBTreeSpecificLevel(t, level);
+     }
+} 
+
+
+
+/* PrintTree in Forma di Albero
+ * Presa da traccia. Non necessario saperla ma utile a visualizzare */
+
+/*Stampa L'albero in maniera "visiva", al momento funziona solo con item_int e non visualizza più di una cifra per numero*/
+void printTree(BTree bt){
+	if (isEmptyTree(bt))
+		return;
+
+	int height = 0, ndsLastLv = 0, qsize = 0, qsizeNoNulls = 0;
+
+	List items = newList();
+	List q = newList();
+	addListTail(q, bt);
+	qsize++;
+	qsizeNoNulls++;
+	while(qsizeNoNulls > 0) { 
+		for (ndsLastLv = qsize; ndsLastLv > 0; ndsLastLv--) {
+			BTree left, right;
+			BTree node = removeHead(q);
+			qsize--;
+			if(node) {
+				addListTail(items, node->value);
+				qsizeNoNulls--;
+			} else {
+				addListTail(items, NULL);
+			}
+			
+			left = getLeft(node);
+			addListTail(q, left);
+			qsize++;
+			if(left)
+				qsizeNoNulls++;
+			
+			right = getRight(node);
+			addListTail(q, right);
+			qsize++;
+			if(right)
+				qsizeNoNulls++;
+		}
+		height++;
+	}
+
+	int n = sizeList(items);
+	if(n == 1) {
+		outputItemLen(removeHead(items), 1);
+		printf("\n");
+		return;
+	}
+	for(int i = 1, pad = n / 2; i < n; i *= 2, pad /= 2) {
+		Item lv[i];
+		
+		if(i == 1) {
+			lv[0] = removeHead(items);
+		} else {
+			for(int j = 0; j < i; j++) {
+				lv[j] = removeHead(items);
+				if(lv[j]) {
+					printf("%*s", pad, "");
+					printf("%c", j % 2 ? '\\' : '/');
+					printf("%*s", pad, "");				
+				} else {
+					printf("%*s", (pad*2)+1, "");
+				}
+				printf(" ");
+			}
+			printf("\n");
+		}
+		
+		for(int j = 0; j < i; j++) {
+			if(lv[j]) {
+				printf("%*s", (pad+1)/2, "");
+				for(int k = pad/2; k > 0; k--)
+					printf("_");
+				outputItemLen(lv[j], 1);
+				for(int k = pad/2; k > 0; k--)
+					printf("_");
+				printf("%*s", (pad+1)/2, "");
+			} else {
+				printf("%*s", (pad*2)+1, "");
+			}
+			printf(" ");
+		}
+		printf("\n");
+	}
+}
