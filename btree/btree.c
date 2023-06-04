@@ -5,6 +5,7 @@
 
 #include "../item/item.h"
 #include "../list/list.h"
+#include "../stack/stack.h"
 
 
 /* --- ALBERO BINARIO ---
@@ -180,6 +181,105 @@ void printBTreePerLevel(BTree t){ //Printa l'albero per livelli
 } 
 
 
+/* --- VISITE ALL'ALBERO BINARIO ITERATIVE --- */
+
+/* Visita PreOrder Iterativa. Usa uno Stack */
+void PreOrder_Iterative(BTree t){
+    if(isEmptyTree(t)) return;
+    Stack s = newStack();
+    push(s, t);
+    while(!isEmptyStack(s)){
+        BTree node = pop(s);
+        outputItem(getBTreeRoot(node));
+        if(!isEmptyTree(getRight(node))) push(s, getRight(node));
+        if(!isEmptyTree(getLeft(node))) push(s, getLeft(node));
+    }
+}
+
+/* Visita PostOrder Iterativa. Usa uno Stack */
+void PostOrder_Iterative(BTree t){
+    if(isEmptyTree(t)) return;
+    Stack s = newStack();
+    BTree current = t;
+    BTree temp, prev = NULL;
+    while(!isEmptyStack(s) || current){
+        if(current){
+            push(s, current);
+            current = getLeft(current);
+        }
+        else{
+            temp = top(s);
+            if (getRight(temp) != NULL && getRight(temp) != prev) {
+                current = getRight(temp);
+            } else {
+                temp = pop(s);
+                outputItem(getBTreeRoot(temp));
+                prev = temp;
+            }
+        }
+    }
+}
+
+/* Visita InOrder (Simmetrica) Iterativa. Usa uno Stack */
+void InOrder_Iterative(BTree t){
+    if(isEmptyTree(t)) return;
+    Stack s = newStack();
+    BTree current = t;
+    BTree temp = NULL;
+    while(!isEmptyStack(s) || current){
+        if(current){
+            push(s, current);
+            current = getLeft(current);
+        } else{
+            temp = pop(s);
+            outputItem(getBTreeRoot(temp));
+            current = getRight(temp);
+        }
+    }
+}
+
+/* --- ALTRE FUNZIONI --- */
+
+/* -- Funzioni di Ricerca -- */
+/* Cerca Elemento in un albero binario, Ricorsiva
+ * Ritorna l'Item trovato, non il suo nodo. Altrimenti NULL*/
+Item searchItemBTree(BTree t, Item el){
+    if(isEmptyTree(t)) return NULL;
+    if(cmpItem(el, getBTreeRoot(t)) == 0){
+        return getBTreeRoot(t);
+    }
+    Item le = searchItemBTree(getLeft(t), el);
+    Item re = searchItemBTree(getRight(t), el);
+    return (le) ? le : re;
+}
+
+/*Ritorna l'Elemento Maggiore in un Albero Binario. NULL se vuoto*/
+Item maxItemBTree(BTree t){
+    if(isEmptyTree(t)) return NULL;
+    Item left = maxItemBTree(getLeft(t));
+    Item right = maxItemBTree(getRight(t));
+    Item root = getBTreeRoot(t);
+    Item max = root;
+    if(left){
+        if(cmpItem(left, max) > 0){max = left;}
+    }
+    if(right){
+        if(cmpItem(right, max) > 0){max = right;}
+    }
+    return max;
+}
+
+/* - Controlla se 2 alberi sono uguali; //1 if equal, otherwise 0 - */
+int areEqualBtrees(BTree t, BTree cmp){
+    if(isEmptyTree(t) && isEmptyTree(cmp)) return 1;
+    if(isEmptyTree(t) || isEmptyTree(cmp)) return 0; // anche ^ (xor) ok ma il caso entrambi true già gestito
+    if(cmpItem(getBTreeRoot(t), getBTreeRoot(cmp)) != 0) return 0;
+    return (areEqualBtrees(getLeft(t), getLeft(cmp)) && areEqualBtrees(getRight(t), getRight(cmp)));
+}
+
+
+
+
 
 /* PrintTree in Forma di Albero
  * Presa da traccia. Non necessario saperla ma utile a visualizzare */
@@ -264,5 +364,16 @@ void printTree(BTree bt){
 			printf(" ");
 		}
 		printf("\n");
+	}
+}
+
+
+/* -- FREE BTREE -- */
+/*Usa solo se Item allocati dinamicamente!*/
+void freeBTree(BTree t){
+	if(!isEmptyTree(t)){
+		freeBTree(t->left);
+		freeBTree(t->right);
+		free(t);
 	}
 }

@@ -34,14 +34,15 @@ void printBTreeSpecificLevel(BTree t, int level); //Stampa un livello specifico 
 
 /*Visite all'Albero Binario Iterative*/
 
-void PreOrder_Iterative(BTree);
-void PostOrder_Iterative(BTree);
-void InOrder_Iterative(BTree); //visita simmetrica iterativa
+void PreOrder_Iterative(BTree); //Visita PreOrder dell'Albero, Usa uno Stack.
+void PostOrder_Iterative(BTree); //Visita PostOrder dell'Albero, Usa uno Stack.
+void InOrder_Iterative(BTree); //visita simmetrica iterativa, Usa uno Stack.
 
 
-/*Lab 10*/
-Item searchItemBTree(BTree, Item);
-Item maxItemBTree(BTree);
+/*Altre Funzioni*/
+/*Versioni Ricorsive*/
+Item searchItemBTree(BTree, Item); //Cerca elemento in un albero binario, Ritorna Item o NULL
+Item maxItemBTree(BTree); //Cerca l'elemento maggiore in un albero binario, Ritorna Item o NULL
 int areEqualBtrees(BTree t, BTree cmp); //1 if equal, otherwise 0
 
 /* -- Free BTree -- */
