@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "btree.h"
 
 #include "../item/item.h"
@@ -304,7 +305,36 @@ void freeBTree(BTree t){
 }
 
 
+/* -- CALCOLO DI UN ALBERO DI ESPRESSIONI (EXPRESSION TREEs) -- */
+float calcolaNodoItemOperatore(float l, float r, Item op){
+	char * oper = op;
+	if(strcmp(oper, "+") == 0){
+		return l + r;
+	} else if(strcmp(oper, "-") == 0){
+		return l - r;
+	} else if(strcmp(oper, "*") == 0){
+		return l * r;
+	} else if(strcmp(oper, "/") == 0){
+		return l / r;
+	} else {
+		fprintf(stderr, "\nOperatore non Inizializzato\n");
+		return -1;
+	}
+}
 
+
+/* Calcola un'espressione inserita in un Albero Binario Pieno. (deve esserlo non controllato in funzione)
+ * Ogni radice è un'operatore, ogni foglia un valore.
+ * I nodi contengono tutti Item di tipo String 
+ * Sembra una visita inOrder ma serve una postOrder per calcolare!*/
+float resolveExpressionTree_Recursive(BTree t){
+	if(isEmptyTree(t)) return 0;
+	if(!getLeft(t) && !getRight(t)){ return ((float)atof(getBTreeRoot(t)));} 
+	//se non ha figli dx e sx è una foglia quindi un numero da ritornare alla radice.
+	float left = resolveExpressionTree_Recursive(getLeft(t));
+	float right = resolveExpressionTree_Recursive(getRight(t));
+	return calcolaNodoItemOperatore(left, right, getBTreeRoot(t));
+}
 
 
 

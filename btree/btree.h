@@ -46,6 +46,13 @@ Item maxItemBTree(BTree); //Cerca l'elemento maggiore in un albero binario, Rito
 int areEqualBtrees(BTree t, BTree cmp); //1 if equal, otherwise 0
 int * heightAndNumNodes(BTree); //Trova Numero Nodi e Altez Albero Insieme. Ritorna array di 2 el: [0] = alt, [1]= n nodi
 
+/* Calcola un'espressione inserita in un Albero Binario Pieno. (deve esserlo non controllato in funzione)
+ * Ogni radice è un'operatore, ogni foglia un valore.
+ * I nodi contengono tutti Item di tipo String 
+ * Sembra una visita inOrder ma serve una postOrder per calcolare!*/
+float resolveExpressionTree_Recursive(BTree t);
+
+
 /* -- Free BTree -- */
 void freeBTree(BTree);
 

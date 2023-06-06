@@ -19,6 +19,13 @@ int cmpItem(Item e1, Item e2){
     return (*a1 - *a2);
 }
 
+/*Funzione Per generare BTree casuali, non necessaria saperla*/
+Item randomItem() {
+	int *pt = malloc(sizeof(int));
+	*pt = rand() % 10;
+	return pt;
+}
+
 
 /*Funzione Per Stampare BTree visivamente, non necessaria saperla*/
 void outputItemLen(Item it, int len){
