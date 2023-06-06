@@ -44,9 +44,13 @@ void InOrder_Iterative(BTree); //visita simmetrica iterativa, Usa uno Stack.
 Item searchItemBTree(BTree, Item); //Cerca elemento in un albero binario, Ritorna Item o NULL
 Item maxItemBTree(BTree); //Cerca l'elemento maggiore in un albero binario, Ritorna Item o NULL
 int areEqualBtrees(BTree t, BTree cmp); //1 if equal, otherwise 0
+int * heightAndNumNodes(BTree); //Trova Numero Nodi e Altez Albero Insieme. Ritorna array di 2 el: [0] = alt, [1]= n nodi
 
 /* -- Free BTree -- */
 void freeBTree(BTree);
+
+
+
 
 
 /* PrintTree in Forma di Albero
@@ -54,3 +58,10 @@ void freeBTree(BTree);
 
 /*Stampa L'albero in maniera "visiva" al momento funziona solo con item_int*/
 void printTree(BTree bt);
+
+
+/* newRandomTree
+ * Presa da traccia. Non necessario saperla ma utile per testare esercizi */
+
+/*Crea un Albero Binario con nNodes di nodi di Item casuali (al momento testato solo int) */
+BTree newRandomTree(int nNodes);

@@ -279,6 +279,33 @@ int areEqualBtrees(BTree t, BTree cmp){
 
 
 
+/* - Trova Numero di Nodi e Altezza Albero Insieme. Ritorna array di 2 elementi: [0] = alt, [1]= n nodi - */
+int * heightAndNumNodes(BTree t){
+	int * hn = calloc(sizeof(int), 2);
+	if(isEmptyTree(t)) return hn;
+	if(!getLeft(t) && !getRight(t)) return hn;
+	int * hl = heightAndNumNodes(getLeft(t));
+	int * hr = heightAndNumNodes(getRight(t));  
+	hn[0] = (hl[0] > hr[0]) ? (hl[0] + 1): (hr[0] + 1);
+	hn[1] = 1 + hl[1] + hr[1];
+    //free(hl);
+    //free(hr);
+	return hn;
+}
+
+/* -- FREE BTREE -- */
+/*Usa solo se Item allocati dinamicamente!*/
+void freeBTree(BTree t){
+	if(!isEmptyTree(t)){
+		freeBTree(t->left);
+		freeBTree(t->right);
+		free(t);
+	}
+}
+
+
+
+
 
 
 /* PrintTree in Forma di Albero
@@ -368,12 +395,49 @@ void printTree(BTree bt){
 }
 
 
-/* -- FREE BTREE -- */
-/*Usa solo se Item allocati dinamicamente!*/
-void freeBTree(BTree t){
-	if(!isEmptyTree(t)){
-		freeBTree(t->left);
-		freeBTree(t->right);
-		free(t);
+/* newRandomTree
+ * Presa da traccia. Non necessario saperla ma utile per testare esercizi */
+
+/*Crea un Albero Binario con nNodes di nodi di Item casuali (al momento testato solo int) */
+BTree newRandomTree(int nNodes) {
+	if(nNodes <= 0)
+		return NULL;
+
+	srand(time(NULL));
+
+	BTree root = calloc(1, sizeof(struct node));
+	root->value = randomItem();
+
+	BTree freeNodes[nNodes];
+	int freeSize = 1;
+	freeNodes[0] = root;
+	for(int i = 1; i < nNodes; i++) {
+		BTree node = calloc(1, sizeof(struct node));
+		node->value = randomItem();
+	
+		int r = rand() % freeSize;
+		if(freeNodes[r]->left == NULL && freeNodes[r]->right == NULL) {
+			if(rand() % 2) {
+				freeNodes[r]->left = node;
+			} else {
+				freeNodes[r]->right = node;
+			}
+		} else {
+			if(freeNodes[r]->right) {
+				freeNodes[r]->left = node;
+			} else if(freeNodes[r]->left) {
+				freeNodes[r]->right = node;
+			} else {
+				printf("non dovrei mai finire qui\n");
+			}
+
+			freeSize--;
+			for(int j = freeSize; j > r; j--) {
+				freeNodes[j - 1] = freeNodes[j];
+			}
+		}
+
+		freeNodes[freeSize++] = node;
 	}
+	return root;
 }
