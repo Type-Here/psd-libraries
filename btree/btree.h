@@ -25,12 +25,20 @@ void inOrder(BTree); //visita simmetrica
 
 /* - Altezza e Numero Nodi - */
 
-int btreeHeight(BTree); //Altezza albero binario
+//Ricorsive
+int btreeHeight(BTree); //Altezza albero binario, solo rad = 0
 int btreeNodesNumber(BTree); //Numero nodi di un albero binario
 
+//Iterative
+int btreeHeight_Iterative(BTree); //Altezza albero binario, solo rad = 0
+int btreeNodesNumber_Iterative(BTree);
+
 /*Visita per Livelli*/
-void printBTreePerLevel(BTree); //Printa l'albero per livelli
+void printBTreePerLevel(BTree); //Printa l'albero per livelli, Ricorsiva
 void printBTreeSpecificLevel(BTree t, int level); //Stampa un livello specifico dell'albero binario
+void printBTreePerLevel_Iterative(BTree t); //Printa l'albero per livelli, Iterativa
+
+void printBTreePerLevel_Iterative_Pretty(BTree t); //Sempre iterativa, stampa con separatore tra livelli
 
 /*Visite all'Albero Binario Iterative*/
 

@@ -7,6 +7,7 @@
 #include "../item/item.h"
 #include "../list/list.h"
 #include "../stack/stack.h"
+#include "../queue/queue.h"
 
 
 /* --- ALBERO BINARIO ---
@@ -28,6 +29,11 @@
  *                                    o   p
  * 
  */
+
+/* NB spessso isEmptyTree(t) non è semanticamente necessario per la funzione, 
+ * ma soprattutto nelle funzioni iterative ci evita di allocare spazio 
+ * 	per le code e stack di appoggio necessarie al funzionamento delle funzioni stesse
+ * risparmiando spazio e tempo */
 
 /* -- DEFINIZIONE STRUTTURA -- */
 struct node{
@@ -93,7 +99,7 @@ BTree getRight(BTree t){
 
 /* ---- VISITE ALL'ALBERO BINARIO ---- */
 
-/* - VISITE RICORSIVE - */
+/* - VISITE RICORSIVE: Es di DFS - */
 
 /* La Visita PreOrder:
  *  - Prima visita il nodo in cui si trova (Stampa il Suo Valore)
@@ -141,24 +147,69 @@ void inOrder(BTree t){
 
 /* - IMPLEMENTAZIONI AGGIUNTIVE - */
 
+/* - ALTEZZA ALBERO - */
+
 /*Return Max of Value beetween 2 int*/
 int maxOfValue(int a, int b){
     if(a >= b) return a;
     return b;
 }
 
-/* - Altezza dell'Albero: Ricorsiva - Nodo Radice = 0 */
+/* - Altezza dell'Albero: Ricorsiva - Nodo Radice = 0 - */
 int btreeHeight(BTree t){ //Altezza albero binario
     if(isEmptyTree(t)) return 0; //P.B.
     if(!getLeft(t) && !getRight(t)) return 0; //P.B. (utile per non aggiungere h=1 quando solo radice!)
     return 1 + maxOfValue(btreeHeight(getLeft(t)), btreeHeight(getRight(t)));
 }
 
+/*- Altezza dell'Albero: Iterativa - Nodo Radice = 0 - */
+int btreeHeight_Iterative(BTree t){
+	if(isEmptyTree(t)) return 0;
+	BTree temp;
+	int h = 0;
+	int counter, nodeslev = 1; //corrisponderà a numero di nodi per livello, parte da 1 per la radice
+	Queue c = newQueue();
+	enqueue(c, t);
+	while(!isEmptyQueue(c)){
+		h++;
+		counter = nodeslev; //il ciclo interno visita i nodi presenti al livello attuale, x nodi = x cicli;
+		nodeslev = 0; //riazzera il conteggio all'inizio di un ciclo interno
+		while(counter--){
+			temp = dequeue(c);
+			if(getLeft(temp)) {enqueue(c, getLeft(temp)); nodeslev++;}
+			if(getRight(temp)) {enqueue(c, getRight(temp)); nodeslev++;}
+		}
+	}
+	free(c);
+	return h-1;
+}
+
+/* - NUMERO DI NODI - */
+
 /* - Ottieni Numero di Nodi: Ricorsivo - */
 int btreeNodesNumber(BTree t){
     if(isEmptyTree(t)) return 0; //P.B.
     return 1 + btreeNodesNumber(getLeft(t)) + btreeNodesNumber(getRight(t));
 }
+
+/* - Ottieni Numero di Nodi: Iterativo - */
+int btreeNodesNumber_Iterative(BTree t){
+	if(isEmptyTree(t)) return 0;
+	BTree temp;
+	Queue c = newQueue();
+	enqueue(c,t);
+	int num = 1;
+	while(!isEmptyQueue(c)){
+		temp = dequeue(c);
+		if(getLeft(temp)) {enqueue(c, getLeft(temp)); num++;}
+		if(getLeft(temp)) {enqueue(c, getLeft(temp)); num++;}
+	}
+	free(c);
+	return num;
+}
+
+
+/* - VISITA PER LIVELLI: Es di BFS - */
 
 /* Internal Visita per livelli
  * Stampa un livello specifico dell'albero */
@@ -182,6 +233,43 @@ void printBTreePerLevel(BTree t){ //Printa l'albero per livelli
 } 
 
 
+/* - Visita Per Livelli: Iterativa - */
+void printBTreePerLevel_Iterative(BTree t){
+	if(isEmptyTree(t)) return;
+	Queue c = newQueue();
+	BTree temp;
+	enqueue(c, t);
+	while(!isEmptyQueue(c)){
+		temp = dequeue(c);
+		outputItem(getBTreeRoot(temp));
+		if(getLeft(temp)) enqueue(c, getLeft(temp));
+		if(getRight(temp)) {enqueue(c, getRight(temp));}
+	}
+	free(c);
+}
+
+/* - Visita Per Livelli: Iterativa; Più Carina la stampa con trattino tra i livelli - */
+void printBTreePerLevel_Iterative_Pretty(BTree t){
+	if(isEmptyTree(t)) return;
+	Queue c = newQueue();
+	BTree temp;
+	int counter, numnodes = 1;
+	enqueue(c, t);
+	while(!isEmptyQueue(c)){
+		counter = numnodes;
+		numnodes = 0;
+		while(counter--){
+			temp = dequeue(c);
+			outputItem(getBTreeRoot(temp));
+			if(getLeft(temp)) {enqueue(c, getLeft(temp)); numnodes++;}
+			if(getRight(temp)) {enqueue(c, getRight(temp)); numnodes++;}
+		}
+		if(!isEmptyQueue(c)) printf("- ");
+	}
+	free(c);
+}
+
+
 /* --- VISITE ALL'ALBERO BINARIO ITERATIVE --- */
 
 /* Visita PreOrder Iterativa. Usa uno Stack */
@@ -195,6 +283,7 @@ void PreOrder_Iterative(BTree t){
         if(!isEmptyTree(getRight(node))) push(s, getRight(node));
         if(!isEmptyTree(getLeft(node))) push(s, getLeft(node));
     }
+	free(s);
 }
 
 /* Visita PostOrder Iterativa. Usa uno Stack */
@@ -219,6 +308,7 @@ void PostOrder_Iterative(BTree t){
             }
         }
     }
+	free(s);
 }
 
 /* Visita InOrder (Simmetrica) Iterativa. Usa uno Stack */
@@ -237,6 +327,7 @@ void InOrder_Iterative(BTree t){
             current = getRight(temp);
         }
     }
+	free(s);
 }
 
 /* --- ALTRE FUNZIONI --- */
@@ -289,8 +380,8 @@ int * heightAndNumNodes(BTree t){
 	int * hr = heightAndNumNodes(getRight(t));  
 	hn[0] = (hl[0] > hr[0]) ? (hl[0] + 1): (hr[0] + 1);
 	hn[1] = 1 + hl[1] + hr[1];
-    //free(hl);
-    //free(hr);
+    free(hl);
+    free(hr);
 	return hn;
 }
 
@@ -326,7 +417,8 @@ float calcolaNodoItemOperatore(float l, float r, Item op){
 /* Calcola un'espressione inserita in un Albero Binario Pieno. (deve esserlo non controllato in funzione)
  * Ogni radice è un'operatore, ogni foglia un valore.
  * I nodi contengono tutti Item di tipo String 
- * Sembra una visita inOrder ma serve una postOrder per calcolare!*/
+ * Sembra una visita inOrder ma serve una postOrder per calcolare!
+ * La inOrder ok per stampare correttamente l'equazione */
 float resolveExpressionTree_Recursive(BTree t){
 	if(isEmptyTree(t)) return 0;
 	if(!getLeft(t) && !getRight(t)){ return ((float)atof(getBTreeRoot(t)));} 
