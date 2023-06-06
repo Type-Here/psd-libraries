@@ -59,11 +59,11 @@ int * heightAndNumNodes(BTree); //Trova Numero Nodi e Altez Albero Insieme. Rito
  * I nodi contengono tutti Item di tipo String 
  * Sembra una visita inOrder ma serve una postOrder per calcolare!*/
 float resolveExpressionTree_Recursive(BTree t);
+void printExpressionTree(BTree t); //Stampa Equazione in un Albero di Espressioni, Visita inOrder Ricorsiva
 
 
 /* -- Free BTree -- */
-void freeBTree(BTree);
-
+void freeBTree(BTree); //Usa solo in caso di Item Allocati dinamicamente! altrimenti uso free su albero
 
 
 

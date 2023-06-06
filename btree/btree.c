@@ -26,7 +26,7 @@
  *                                  /  \   /  \                                  
  *                                 d    l  p   s
  *                                     / \
- *                                    o   p
+ *                                    o   q
  * 
  */
 
@@ -210,6 +210,8 @@ int btreeNodesNumber_Iterative(BTree t){
 
 
 /* - VISITA PER LIVELLI: Es di BFS - */
+
+/*Es. h - a c - d l p s - o q*/
 
 /* Internal Visita per livelli
  * Stampa un livello specifico dell'albero */
@@ -427,6 +429,29 @@ float resolveExpressionTree_Recursive(BTree t){
 	float right = resolveExpressionTree_Recursive(getRight(t));
 	return calcolaNodoItemOperatore(left, right, getBTreeRoot(t));
 }
+
+/*Stampa un'equazione contenuta in un Albero di Espressioni, Visita inOrder Ricorsiva*/
+/*Funzione Interna: Prende extpar come parametro 1 = stampa le parentesi esterne, 0 = no */
+void printExpressionTree_Internal(BTree t, int extpar){
+	if(isEmptyTree(t)) return;
+	if(getLeft(t) && getRight(t) && extpar) printf("("); // se siamo in un nodo radice (operatore) stampa apri parentesi
+	//NB tieni a mente come stampa inOrder! 
+	//sei nel nodo radice fai "(" - left(num) - radice(+-*/) - right(num) -")"
+	printExpressionTree_Internal(getLeft(t), 1);
+	outputItem(getBTreeRoot(t));
+	printExpressionTree_Internal(getRight(t), 1);
+	if(getLeft(t) && getRight(t) && extpar) printf(")"); //come per apri parentesi ma dopo la ricorsione
+}
+
+/*Stampa un'equazione contenuta in un Albero di Espressioni, Visita inOrder Ricorsiva*/
+void printExpressionTree(BTree t){
+	printExpressionTree_Internal(t, 0); 
+}
+/* 0 = non stampare le parentesi al nodo radice t (le più esterne che racchiudono tutta l'equazione)
+ * se vuoi stampare anche quelle inserisci 1 (o un num != 0)*/
+
+
+
 
 
 
