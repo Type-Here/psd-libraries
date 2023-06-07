@@ -30,8 +30,8 @@ int addListTail(List, Item); //aggiungi in coda
 /*Funzioni di Reverse e Copia*/
 
 void reverseList(List);
-List cloneList(List);
-List cloneListItem(List);
+List cloneList(List); //Do not Use
+List cloneListItem(List); //Copia completa con sua allocazione di memoria
 
 
 /*--Recursive Functions--*/
@@ -48,6 +48,9 @@ void destroyListRec(List); //Distruggi tutti i nodi ma rimane la lista vuota
 void mergeSortList(List);
 void selectionSortList(List);
 void selectionSortListRecursive(List);
+
+void bubbleSortList(List l); // Versione Iterativa
+void bubbleSortList_Recursive(List l); //Versione Ricorsiva (una delle varie modalità)
 
 /*--Free List--*/
 int freeList(List);
