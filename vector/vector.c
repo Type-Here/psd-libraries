@@ -165,7 +165,7 @@ int binarySearch(Item *a, int size, Item el){ //ritorna indice dell'array, -1 no
     int sup = size - 1;
     int inf = 0;
     while(inf <= sup){
-        m = (sup + inf + 1) / 2;
+        m = (sup + inf) / 2;
         if(cmpItem(el, a[m]) == 0) return m;
         else if(cmpItem(el, a[m]) > 0){
             inf = m+1;
@@ -179,7 +179,7 @@ int binarySearch(Item *a, int size, Item el){ //ritorna indice dell'array, -1 no
 /*Ricerca Binaria Ricorsiva*/
 int binarySearchRecursive(Item *a, int size, Item el){
     if(size < 1) return -1;
-    int m = size / 2;
+    int m = size-1 / 2;
     if(cmpItem(el,a[m]) == 0){ return m;}
     else if(cmpItem(el,a[m]) > 0){
         /* I fattori m +/-1 correttivi servono perché la funz ricorsiva ritorna l'indice
@@ -270,7 +270,7 @@ Item medianOfThreeItem(Item b, Item m, Item e){
 
 int qsPartition(Item *a, int begin, int end){
     Item pivot = a[begin];
-    //Item pivot = medianOfThreeItem(a[begin], a[(begin + 2)/2], a[end]); //Ottimizzazione con calcolo mediana tra 3 valori
+    //Item pivot = medianOfThreeItem(a[begin], a[(begin + end)/2], a[end]); //Ottimizzazione con calcolo mediana tra 3 valori
     int i = begin-1;
     int j = end+1;
     while(1){
