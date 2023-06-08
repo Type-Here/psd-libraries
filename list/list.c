@@ -222,7 +222,7 @@ void reverseList(List l){
 }
 
 /* Ritorna una seconda Lista l2 con puntatori ai nodi di l! 
- * Ogni modifica a l sarà in l2 e viceversa!
+ * Ogni modifica a l sarà in l2 e viceversa! (questo potrebbe sballare i puntatori in l quindi da usare con cautela!)
  * NB Le funzioni di CloneList e CloneListItem in libreria dei prof potrebbero essere invertite!!*/
 List cloneList(List l){
     List l2 = newList();
@@ -472,4 +472,43 @@ void selectionSortList(List l){
          swapItemList(&(temp->value), &(minimo->value));
          temp = temp->next;
     }
+}
+
+
+/* - BUBBLE SORT LIST - */
+
+/*- Implementazione BUBBLE SORT, Versione Iterativa -*/
+void bubbleSortList(List l){
+    if(isEmptyList(l) || sizeList(l) == 1) return;
+    struct node * temp = l->head;
+    struct node * end = NULL;
+    while(temp->next != end){
+        while(temp->next != end){
+            if(cmpItem(temp->value, temp->next->value) > 0){
+                swapItemList(&(temp->value), &(temp->next->value));
+            }
+            temp = temp->next;
+        }
+        end = temp;
+        temp = l->head;
+    }
+}
+
+/*Internal di BubbleSort Ricorsivo*/
+void bubbleSortList_Recursive_Internal(struct node * head, struct node * end){
+    if(head->next ==  end) return;
+    struct node * temp = head;
+    while(temp->next != end){
+        if(cmpItem(temp->value, temp->next->value) > 0){
+            swapItemList(&(temp->value), &(temp->next->value));
+        }
+    }
+    end = temp;
+    bubbleSortList_Recursive_Internal(head, end);
+}
+
+/*- Implementazione BUBBLE SORT, Versione Ricorsiva -*/
+void bubbleSortList_Recursive(List l){
+    if(isEmptyList(l) || sizeList(l) == 1) return;
+   bubbleSortList_Recursive_Internal(l->head, NULL);
 }
