@@ -30,7 +30,7 @@
  * 
  */
 
-/* NB spessso isEmptyTree(t) non è semanticamente necessario per la funzione, 
+/* NB spesso isEmptyTree(t) non è semanticamente necessario per la funzione, 
  * ma soprattutto nelle funzioni iterative ci evita di allocare spazio 
  * 	per le code e stack di appoggio necessarie al funzionamento delle funzioni stesse
  * risparmiando spazio e tempo */

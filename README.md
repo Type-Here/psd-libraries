@@ -29,7 +29,7 @@ Every module has extensive comment to explain each function. (In `Italian` Only 
 ### Stacks
 
 - `stack_array.c`: Implementation of a stack using arrays.
-- `stack_linked.c`: Implementation of a stack using linked lists.
+- `stack_list.c`: Implementation of a stack using linked lists.
 - `stack.h` : Interface.
 
 ### Binary Trees
@@ -45,11 +45,11 @@ Every module has extensive comment to explain each function. (In `Italian` Only 
 ### Array-based Sorting
 
 - `vector.c` and `vector.h`: Implementation of sorting algorithms for arrays.
-  - Selection Sort (`selection_sort`)
-  - Insertion Sort (`insertion_sort`)
-  - Bubble Sort (`bubble_sort`)
-  - Quicksort (`quick_sort`)
-  - Mergesort (`merge_sort`)
+  - Selection Sort (`selectionSort`) both Iterative and Recursive
+  - Insertion Sort (`insertionSort`) both Iterative and Recursive
+  - Bubble Sort (`bubbleSort` and `bubbleSortAdaptive`) both Iterative and Recursive
+  - Quicksort (`quickSort`)
+  - Mergesort (`mergeSort`) both Iterative and Recursive
 
 ### List-based Sorting
 
