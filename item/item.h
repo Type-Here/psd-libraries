@@ -4,8 +4,6 @@ Item inputItem();
 void outputItem(Item);
 int cmpItem(Item,Item);
 
-/*Funzione Per Stampare BTree visivamente, non necessaria saperla*/
-void outputItemLen(Item it, int len);
 
-/*Funzione Per generare BTree casuali, non necessaria saperla*/
+/*Funzione Per generare Item casuali, non necessaria saperla, utile per test*/
 Item randomItem();

@@ -95,8 +95,9 @@ void bubbleSort(Item *a, int size){
 
 /*- Bubble Sort Adattativo -*/
 void bubbleSortAdaptive(Item *a, int size){
-    int i, j, isOrdered = 1;
+    int i, j, isOrdered;
     for(i = 1; i < size; i++){
+        isOrdered = 1;
         for(j=0; j < size - i; j++){
             if(cmpItem(a[j], a[j+1]) > 0){
                 swap(&a[j], &a[j+1]);
@@ -195,7 +196,7 @@ int binarySearchRecursive(Item *a, int size, Item el){
 
 
 
-/*--RICERCA BINARIA RICORSIVA -- Vecchia Implementazione, lasciata per documentazione
+/*--RICERCA BINARIA RICORSIVA -- Vecchia Implementazione, lasciata per documentazione, NON in vector.h !--*/
 int BinarySearchRec_internal(int *a, int inf, int sup, int k){
 	int center;
 	if(inf > sup) return -1;
@@ -214,9 +215,9 @@ int BinarySearchRec_internal(int *a, int inf, int sup, int k){
 	
 }
 
-int BinarySearchRec(int *a, int size, int k){
+int BinarySearchRec_Old(int *a, int size, int k){
 	return BinarySearchRec_internal(a,0,size-1,k);
-}*/
+}
 
 
 /** - ORDINAMENTI AVANZATI ARRAY - **/

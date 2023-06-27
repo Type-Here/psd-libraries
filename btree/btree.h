@@ -64,19 +64,3 @@ void printExpressionTree(BTree t); //Stampa Equazione in un Albero di Espression
 
 /* -- Free BTree -- */
 void freeBTree(BTree); //Usa solo in caso di Item Allocati dinamicamente! altrimenti uso free su albero
-
-
-
-
-/* PrintTree in Forma di Albero
- * Presa da traccia. Non necessario saperla ma utile a visualizzare */
-
-/*Stampa L'albero in maniera "visiva" al momento funziona solo con item_int*/
-void printTree(BTree bt);
-
-
-/* newRandomTree
- * Presa da traccia. Non necessario saperla ma utile per testare esercizi */
-
-/*Crea un Albero Binario con nNodes di nodi di Item casuali (al momento testato solo int) */
-BTree newRandomTree(int nNodes);

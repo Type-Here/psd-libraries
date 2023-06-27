@@ -1,7 +1,7 @@
 /*FUNZIONI SU VETTORE*/
 
 /* --Funzioni Generiche-- */
-void input_array(Item *arr, int size);
+void input_array(Item *arr, int size); //Input from user with InputItem
 void output_array(Item *arr, int size);
 Item * concatena_array(Item *arr1, Item *arr2, int size1, int size2); //ritorna un terzo array
 

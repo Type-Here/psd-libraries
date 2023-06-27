@@ -8,7 +8,7 @@
 /* Qui Tutto quello Che non rientra in categorie specifiche
  * Troviamo:
  * - Funzioni Ricorsive
- * - ADT Punto Cartesiano
+ * - ADT Punto Cartesiano //Not Yet
  * - Altr.. (da completare) 
  * - Massimo Comune Divisore */
 

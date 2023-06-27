@@ -22,12 +22,8 @@ int cmpItem(Item e1, Item e2){
     return (strcmp(s1, s2));
 }
 
-/*Vuota serve solo per compilare! Non Usare printTree con Item String!*/
-void outputItemLen(Item it, int len){return;}
-
-
 /* Funzione Per generare BTree casuali, non necessaria saperla!
- * serve solo per compilare! Non Usare newRandomTree con Item String! */
+ * NB Working On It */
 Item randomItem() {
     char * r = "isnotrand";
     return r;
