@@ -1,0 +1,1 @@
+..\main.exe input1.txt input2.txt oracle.txt output.txt output2.txt
